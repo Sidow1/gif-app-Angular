@@ -8,8 +8,9 @@ export class GifsService {
   private _tagsHistory: string[] = [];
   private apiKey: string = 'TnVusLOYQskGoAmzLKyuUcz7pTCVAonD';
   private serviceUrl: string = 'https://api.giphy.com/v1/gifs';
+
   constructor(private http: HttpClient) {
-    this.loadLocalStorage;
+    this.loadLocalStorage();
   }
 
   get tagsHistory(): string[] {
@@ -33,9 +34,11 @@ export class GifsService {
   }
 
   private loadLocalStorage(): void {
-    if (localStorage.getItem('history')) return;
-
+    if (!localStorage.getItem('history')) return;
     this._tagsHistory = JSON.parse(localStorage.getItem('history')!);
+
+    if (this._tagsHistory.length === 0) return;
+    this.searchTag(this._tagsHistory[0]);
   }
 
   searchTag(tag: string): void {
